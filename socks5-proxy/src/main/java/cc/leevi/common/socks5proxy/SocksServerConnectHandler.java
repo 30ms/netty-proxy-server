@@ -36,6 +36,8 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.FutureListener;
 import io.netty.util.concurrent.Promise;
 
+import java.util.logging.FileHandler;
+
 @ChannelHandler.Sharable
 public final class SocksServerConnectHandler extends SimpleChannelInboundHandler<SocksMessage> {
 
@@ -63,8 +65,12 @@ public final class SocksServerConnectHandler extends SimpleChannelInboundHandler
                                     @Override
                                     public void operationComplete(ChannelFuture channelFuture) {
                                         ctx.pipeline().remove(SocksServerConnectHandler.this);
-                                        outboundChannel.pipeline().addLast(new RelayHandler(ctx.channel()));
-                                        ctx.pipeline().addLast(new RelayHandler(outboundChannel));
+                                        outboundChannel.pipeline().addLast(
+                                                //读取目标ip端口连接数据并转发至源ip端口连接
+                                                new RelayToSourceHandler(ctx.channel()));
+                                        ctx.pipeline().addLast(
+                                                //读取源ip端口数据并转发至目标ip端口
+                                                new RelayToTargetHandler(outboundChannel));
                                     }
                                 });
                             } else {
