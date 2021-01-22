@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.example.datacollector.rpc.protobuf;
+
+import "RequestPage.proto";
+import "RequestParam.proto";
+
+option java_outer_classname="SaleOrderListRequestProto";
+
+message SaleOrderListRequest{
+  repeated RequestParam requestParams=1;
+  string queryStr=2;
+  RequestPage requestPage=3;
+}

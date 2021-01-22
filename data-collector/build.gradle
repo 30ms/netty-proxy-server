@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id "com.google.protobuf" version "0.8.14"
     id 'java'
 }
 
@@ -21,6 +22,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.netty:netty-all'
+    implementation 'com.google.protobuf:protobuf-java:3.14.0'
+//    implementation 'io.grpc:grpc-all:1.35.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -28,4 +31,44 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        proto{
+            srcDirs 'src/main/protobuf'
+        }
+        java {
+        }
+    }
+}
+
+protobuf {
+    protoc {
+//        path = 'D:\\Protobuf\\protoc-3.14.0-win64\\bin\\protoc.exe'
+//         Download from repositories
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    // Locate the codegen plugins
+    plugins {
+        // Locate a plugin with name 'grpc'. This step is optional.
+        // If you don't locate it, protoc will try to use "protoc-gen-grpc" from
+        // system search path.
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
+            // or
+            // path = 'tools/protoc-gen-grpc-java'
+        }
+        // Any other plugins
+    }
+
+    generatedFilesBaseDir = "$projectDir/src/"
+
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+            }
+        }
+    }
+
 }

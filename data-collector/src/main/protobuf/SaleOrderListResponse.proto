@@ -1,0 +1,46 @@
+syntax = "proto3";
+package com.example.datacollector.rpc.protobuf;
+
+option java_outer_classname="SaleOrderListResponseProto";
+
+message SaleOrderListResponse{
+  repeated SaleOrderListItem list=1;
+  int32 pageNum=2;
+  int32 totalCount=3;
+
+  message SaleOrderListItem{
+    int32 lineNum=1;                  //0x08
+    string redFlushOrderId=2;         //0x12
+    string orderId=4;                 //0x22
+    string gzDateStr=5;               //0x2a
+    string transactionTypeStr=6;      //0x32
+    string netPointNameStr=8;         //0x42
+    string sellTypeStr=9;             //0x4a
+    string businessDateStr=10;        //0x52
+    string assistantStr=12;           //0x62
+    string unKnownStr1=13;            //0x6a
+    sint32 count=14;                   //0x70
+    double goldTotalWeight=15;        //0x79
+    double actualTotalSellingPrice=18;//0x9101
+    double discountTotalAmount=19;    //0x9901
+    double couponTotalAmount=20;      //0xa101
+    double receivableTotalAmount=21;  //0xa901
+    double cashierTotalAmount=22;     //0xb101
+    string note=23;                   //0xba01
+    string printDetail=30;            //0xf201
+    string materials=31;              //0xfa01
+    string unknownStr2=36;            //0xa202
+    string creator=44;                //0xe202
+    string createDateTimeStr=45;      //0xea02
+    string modifyDateTimeStr=48;      //0x8203
+    string verifyDateTimeStr=51;      //0x9a03
+    sint32 unknownInt1=52;             //0xa003
+    sint32 unknownInt2=64;             //0x8004
+    string unknownStr3=70;            //0xb204
+    string unknownStr4=71;            //0xba04
+    sint32 unknownInt3=87;             //0xb805
+    string unknownStr5=88;            //0xc205
+    double unknownDouble1=92;         //0xe105
+    double unknownDouble2=93;         //0x4905
+  }
+}

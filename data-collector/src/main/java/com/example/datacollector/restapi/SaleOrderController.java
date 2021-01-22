@@ -1,12 +1,16 @@
 package com.example.datacollector.restapi;
 
 import com.example.datacollector.rpc.*;
+import com.example.datacollector.rpc.protobuf.SaleOrderListResponseProto;
+import com.example.datacollector.rpc.protobuf.SalesDetailQueryResponseProto;
 import com.example.datacollector.rpc.sale.detail.SaleOrderDetailQueryRequest;
-import com.example.datacollector.rpc.sale.detail.SaleOrderDetailQueryResponse;
 import com.example.datacollector.rpc.sale.list.*;
+import com.google.protobuf.Message;
+import com.google.protobuf.MessageLite;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.util.concurrent.Promise;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +36,7 @@ public class SaleOrderController {
     }
 
     @GetMapping("list")
-    public ResponseEntity<SaleOrderListQueryResponse> saleOrderList(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzStartDate", required = false) LocalDate startDate,
+    public ResponseEntity saleOrderList(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzStartDate", required = false) LocalDate startDate,
                                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzEndDate", required = false) LocalDate endDate,
                                                                     @RequestParam(value = "transactionTypeStr",required = false) String transactionTypeStr,
                                                                     @RequestParam(value = "pageSize", defaultValue = "50") int pageSize,
@@ -52,14 +56,14 @@ public class SaleOrderController {
             DefaultRequestParam param3 = DefaultRequestParam.of(DefaultRequestParamName.of("swlx"), DefaultRequestParamValue.of(transactionTypeStr));
             paramList.add(param3);
         }
-        SaleOrderListQueryRequest request = new SaleOrderListQueryRequest("ed8b111d891e42d28d58652b410eaa63", paramList, RequestPage.of(pageSize,pageNum));
-
-        return ResponseEntity.ok(request(SaleOrderListQueryResponse.class, request));
+        SaleOrderListQueryRequest request = new SaleOrderListQueryRequest("ff7a1b00d9bb40d2a0dfc4e035f23192", paramList, RequestPage.of(pageSize,pageNum));
+        Message message = request(request, SaleOrderListResponseProto.SaleOrderListResponse.getDefaultInstance());
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("detail")
-    public ResponseEntity<Object> saleOrderDetail(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzStartDate", required = false) LocalDate startDate,
-                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzEndDate", required = false) LocalDate endDate) {
+    public ResponseEntity saleOrderDetail(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzStartDate", required = false) LocalDate startDate,
+                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "gzEndDate", required = false) LocalDate endDate) {
         if (startDate == null) {
             startDate = LocalDate.now();
         }
@@ -68,7 +72,7 @@ public class SaleOrderController {
         }
         List<DefaultRequestParam> params = new ArrayList<>();
         //网点编码
-        DefaultRequestParam param = DefaultRequestParam.of(DefaultRequestParamName.of("wdbm"), DefaultRequestParamValue.of("574"));
+        DefaultRequestParam param = DefaultRequestParam.of(DefaultRequestParamName.of("wdbm"), DefaultRequestParamValue.of("574,701,702,759,930"));
         params.add(param);
         //审核状态 1-已审核
         DefaultRequestParam param2 = DefaultRequestParam.of(DefaultRequestParamName.of("locked"), DefaultRequestParamValue.of("1"));
@@ -92,18 +96,17 @@ public class SaleOrderController {
         DefaultRequestParam param8 = DefaultRequestParam.of(DefaultRequestParamName.of("gzjsrq"), DefaultRequestParamValue.of(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
         params.add(param8);
         //事务类型
-        DefaultRequestParam param9 = DefaultRequestParam.of(DefaultRequestParamName.of("swlx"), DefaultRequestParamValue.of("正常零售"));
+        DefaultRequestParam param9 = DefaultRequestParam.of(DefaultRequestParamName.of("swlx"), DefaultRequestParamValue.of(""));
         params.add(param9);
-
-        DefaultRequest request = new SaleOrderDetailQueryRequest("ed8b111d891e42d28d58652b410eaa63", params);
-
-        return ResponseEntity.ok(request(SaleOrderDetailQueryResponse.class, request));
+        DefaultRequest request = new SaleOrderDetailQueryRequest("ff7a1b00d9bb40d2a0dfc4e035f23192", params);
+        Message message = request(request, SalesDetailQueryResponseProto.SalesDetailQueryResponse.getDefaultInstance());
+        return ResponseEntity.ok(message);
     }
 
 
-    private <R> R request(Class<R> rClass,DefaultRequest request) {
-        R response;
-        Promise<R> promise = eventExecutors.next().newPromise();
+    private Message request(DefaultRequest request, MessageLite messageLite) {
+        Message message;
+        Promise<Message> promise = eventExecutors.next().newPromise();
         new Bootstrap()
                 .group(eventExecutors)
                 .channel(NioSocketChannel.class)
@@ -112,18 +115,21 @@ public class SaleOrderController {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
-                        channel.pipeline().addLast(new RequestAndResponseHandler<>(promise, rClass, request.encode()));
+                        channel.pipeline()
+                                .addLast(new RequestAndResponseHandler(request))
+                                .addLast(new ProtobufDecoder(messageLite))
+                                .addLast(new DecodePromiseHandler(promise));
                     }
                 })
                 .connect("121.201.119.60", 9001);
 
         try {
             promise.await();
-            response = promise.get();
+            message = promise.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new RuntimeException("RPC调用异常");
         }
-        return response;
+        return message;
     }
 }

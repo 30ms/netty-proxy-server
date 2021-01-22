@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package com.example.datacollector.rpc.protobuf;
+
+option java_outer_classname="RequestPageProto";
+
+message RequestPage{
+  uint32 pageSize=1;
+  uint32 pageNum=2;
+}

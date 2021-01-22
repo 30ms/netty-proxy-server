@@ -1,0 +1,58 @@
+syntax = "proto3";
+package com.example.datacollector.rpc.protobuf;
+
+option java_outer_classname="SalesDetailQueryResponseProto";
+
+message SalesDetailQueryResponse{
+
+  message SaleOrderDetail{
+    string netPointName=1;
+    string unknownDateStr=2;
+    string unknownDateStr2=3;
+    string orderId=4;
+    string transactionType=5;
+    string direction=6;
+    string serialNumber=7;
+    string bigName=8;
+    string materialName=9;
+    string categoryName=10;
+    string styleName=11;
+    string productName=12;
+    string certificateNumber=13;
+    string rawNumber=14;
+    string specification=15;
+    double totalWeight=16;
+    double goldWeight=17;
+    double unknownDouble1=18;
+    double mainStoneWeight=19;
+    int32 mainStoneCount=20;
+    string cleanness=21;
+    string color=22;
+    double viceStoneWeight=23;
+    int32 viceStoneCount=24;
+    double sellingDiscount=25;
+    double goldPrice=26;
+    double unKnownDouble2=27;
+    double unKnownDouble3=29;
+    double tagPrice=30;
+    double actualSellingPrice=31;
+    string assistantName=32;
+    string printDetail=33;
+    int32 printCount=34;
+    string storageDateStr=35;
+    string oneLevelSeries=36;
+    string factoryNumber=37;
+    string unknownStr1=38;
+    string warehouseName=39;
+    double cashierAmount=40;
+    int32 count=41;
+    string cashierType=42;
+    string exchangeMaterialType=43;
+    double unknownDouble4=44;
+    double unknownDouble5=46;
+    string unknownStr2=47;
+    string unit=48;
+  }
+
+  repeated SaleOrderDetail saleOrderDetails=1;
+}

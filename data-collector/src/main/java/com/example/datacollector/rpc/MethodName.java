@@ -10,6 +10,8 @@ public class MethodName {
 
     public static final MethodName SALE_DETAIL_QUERY = new MethodName("xiaoshoumingxichaxun");
 
+    public static final MethodName Inventory_QUERY = new MethodName("kucundanjianchaxun");
+
     private String value;
 
     public MethodName(String value) {

@@ -1,0 +1,48 @@
+syntax = "proto3";
+package com.example.datacollector.rpc.protobuf;
+
+option java_outer_classname="InventoryQueryResponseProto";
+
+message InventoryQueryResponse{
+  message InventoryItem{
+    string warehouseName=1;
+    string materialAttribution=2;
+    string categoryAttribution=3;
+    string serialNumber=4;
+    string certificateNumber=5;
+    int32 count=6;
+    double totalWeight=7;
+    double goldWeight=8;
+    double unKnownDouble1=9;
+    double unKnownDouble2=10;
+    double unKnownDouble3=11;
+    double unKnownDouble4=12;
+    double sellingPrice=13;
+    double actualSellingPrice=14;
+    double unKnownDouble5=15;
+    string productCategory=16;
+    string productName=17;
+    string mainStoneWeight=18;
+    string mainStoneCount=19;
+    string viceStoneWeight=20;
+    string viceStoneCount=21;
+    string billing=22;
+    string billingNumber=23;
+    string storageDateStr=24;
+    string firstLevelSerials=25;
+    string factoryNumber=26;
+    string productUnit=27;
+    string costUnit=28;
+    string color=29;
+    string cleanness=30;
+    double costUnitPrice=31;
+    string certificateNumberReverse=32;
+    string styleNumber=33;
+    string specification=34;
+    string netPointName=35;
+    string purchaseCost=36;
+    string mosaicInfo=37;
+  }
+
+  repeated InventoryItem inventoryItems=1;
+}
