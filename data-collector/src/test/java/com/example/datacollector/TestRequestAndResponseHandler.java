@@ -1,5 +1,7 @@
-package com.example.datacollector.rpc;
+package com.example.datacollector;
 
+import com.example.datacollector.rpc.DefaultRequest;
+import com.example.datacollector.rpc.Util;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,13 +10,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestAndResponseHandler extends ChannelInboundHandlerAdapter {
+public class TestRequestAndResponseHandler extends ChannelInboundHandlerAdapter {
 
     private static final Map<String, ByteBuf> channelDataBuf = new HashMap<>();
-    private final DefaultRequest defaultRequest;
+    private final TestDefaultRequest testDefaultRequest;
 
-    public RequestAndResponseHandler(DefaultRequest defaultRequest) {
-        this.defaultRequest = defaultRequest;
+    public TestRequestAndResponseHandler(TestDefaultRequest testDefaultRequest) {
+        this.testDefaultRequest = testDefaultRequest;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class RequestAndResponseHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ByteBuf byteBuf = ctx.alloc().buffer();
         System.out.println("发送请求数据...");
-        byteBuf.writeBytes(defaultRequest.encode());
+        byteBuf.writeBytes(testDefaultRequest.encode());
         Util.writeByteBufToFile(byteBuf, "C:\\Users\\Administrator\\Desktop\\1.txt", false);
         ctx.writeAndFlush(byteBuf, ctx.newPromise().addListener(future -> {
             if (future.isSuccess()) {

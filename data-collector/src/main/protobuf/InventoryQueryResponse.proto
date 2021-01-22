@@ -3,7 +3,7 @@ package com.example.datacollector.rpc.protobuf;
 
 option java_outer_classname="InventoryQueryResponseProto";
 
-message InventoryQueryResponse{
+message InventoryQueryResponseMessage{
   message InventoryItem{
     string warehouseName=1;
     string materialAttribution=2;

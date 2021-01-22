@@ -1,13 +1,12 @@
-package com.example.datacollector.rpc;
+package com.example.datacollector;
 
+import com.example.datacollector.rpc.MethodName;
+import com.example.datacollector.rpc.UserToken;
+import com.example.datacollector.rpc.Util;
 import com.google.protobuf.Message;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public abstract class DefaultRequest {
-
+public abstract class TestDefaultRequest {
     protected final UserToken userToken;
 
     protected final byte[] fixedBytes;
@@ -16,7 +15,7 @@ public abstract class DefaultRequest {
 
     protected final Message requestMessage;
 
-    public DefaultRequest(UserToken userToken, byte[] fixedBytes, MethodName methodName, Message requestMessage) {
+    public TestDefaultRequest(UserToken userToken, byte[] fixedBytes, MethodName methodName, Message requestMessage) {
         this.userToken = userToken;
         this.fixedBytes = fixedBytes;
         this.methodName = methodName;
@@ -39,6 +38,8 @@ public abstract class DefaultRequest {
         System.arraycopy(methodNameBytes, 0, result, pos, methodNameBytes.length);
         pos += methodNameBytes.length;
         System.arraycopy(requestMessageBytes, 0, result, pos, requestMessageBytes.length);
+
         return result;
     }
+
 }

@@ -3,7 +3,7 @@ package com.example.datacollector.rpc.protobuf;
 
 option java_outer_classname="SaleOrderListResponseProto";
 
-message SaleOrderListResponse{
+message SaleOrderListResponseMessage{
   repeated SaleOrderListItem list=1;
   int32 pageNum=2;
   int32 totalCount=3;

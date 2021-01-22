@@ -1,8 +1,9 @@
 package com.example.datacollector;
 
 import com.example.datacollector.rpc.*;
-import com.example.datacollector.rpc.sale.list.RequestPage;
-import com.example.datacollector.rpc.sale.list.SaleOrderListQueryRequest;
+import com.example.datacollector.rpc.protobuf.RequestParamProto;
+import com.example.datacollector.rpc.protobuf.SaleOrderListRequestProto;
+import com.example.datacollector.rpc.protobuf.SaleOrderListResponseProto;
 import com.google.protobuf.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -17,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @SpringBootTest
@@ -30,12 +29,15 @@ class ObjectDataCollectorApplicationTests {
     @Test
     void contextLoads() throws IOException, InterruptedException, ExecutionException {
 
-        List<DefaultRequestParam> paramList = new ArrayList<>();
-        DefaultRequestParam param = DefaultRequestParam.of(DefaultRequestParamName.of("gz_ksrq"), DefaultRequestParamValue.of(LocalDate.now().minusDays(10).format(DateTimeFormatter.ISO_LOCAL_DATE)));
-        paramList.add(param);
-        DefaultRequestParam param2 = DefaultRequestParam.of(DefaultRequestParamName.of("gz_jsrq"), DefaultRequestParamValue.of(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)));
-        paramList.add(param2);
-        SaleOrderListQueryRequest request = new SaleOrderListQueryRequest("ff7a1b00d9bb40d2a0dfc4e035f23192", paramList, RequestPage.of(50, 1));
+        TestDefaultRequest request = new TestProtobufRequest(
+                new UserToken("7fb14db3bbb8422ba874434f1eb34b5c"),
+                SaleOrderListRequestProto.SaleOrderListRequestMessage.newBuilder()
+                        .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("gz_ksrq").setValue(LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE)).build())
+                        .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("gz_jsrq").setValue(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)).build())
+//                        .setQueryConditionStr("")
+                        .setPagSize(50)
+                        .setPageNum(1)
+                        .build());
 
         Promise<Message> promise = eventExecutors.next().newPromise();
 
@@ -48,8 +50,8 @@ class ObjectDataCollectorApplicationTests {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
                         channel.pipeline()
-                                .addLast(new RequestAndResponseHandler(request))
-                                .addLast(new ProtobufDecoder(SaleOrderListResponseProto.SaleOrderListResponse.getDefaultInstance()))
+                                .addLast(new TestRequestAndResponseHandler(request))
+                                .addLast(new ProtobufDecoder(SaleOrderListResponseProto.SaleOrderListResponseMessage.getDefaultInstance()))
                                 .addLast(new DecodePromiseHandler(promise));
                     }
                 })

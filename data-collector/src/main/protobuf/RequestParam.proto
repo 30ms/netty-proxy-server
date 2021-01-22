@@ -4,7 +4,7 @@ package com.example.datacollector.rpc.protobuf;
 
 option java_outer_classname="RequestParamProto";
 
-message RequestParam{
+message RequestParamMessage{
   string name=1;
   string value=2;
 }
