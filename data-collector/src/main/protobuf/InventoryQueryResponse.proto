@@ -13,10 +13,10 @@ message InventoryQueryResponseMessage{
     int32 count=6;
     double totalWeight=7;
     double goldWeight=8;
-    double unKnownDouble1=9;
-    double unKnownDouble2=10;
-    double unKnownDouble3=11;
-    double unKnownDouble4=12;
+    double miscellaneousDeductionAmount=9;
+    double bowlDeductionAmount=10;
+    double recoveryAmount=11;
+    double processingFee=12;
     double sellingPrice=13;
     double actualSellingPrice=14;
     double unKnownDouble5=15;
@@ -40,8 +40,8 @@ message InventoryQueryResponseMessage{
     string styleNumber=33;
     string specification=34;
     string netPointName=35;
-    string purchaseCost=36;
-    string mosaicInfo=37;
+    double purchaseCost=37;
+    string mosaicInfo=38;
   }
 
   repeated InventoryItem inventoryItems=1;

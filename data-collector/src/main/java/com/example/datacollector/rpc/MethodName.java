@@ -6,7 +6,7 @@ public class MethodName {
 
     public static final MethodName SALE_ORDER_LIST = new MethodName("list");
 
-    public static final MethodName SALE_ORDER_ITEM = new MethodName("item");
+    public static final MethodName LOGIN = new MethodName("login4Retail");
 
     public static final MethodName SALE_DETAIL_QUERY = new MethodName("xiaoshoumingxichaxun");
 

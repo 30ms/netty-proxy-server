@@ -7,8 +7,8 @@ message SalesDetailQueryResponseMessage{
 
   message SaleOrderDetail{
     string netPointName=1;
-    string unknownDateStr=2;
-    string unknownDateStr2=3;
+    string ywDateStr=2;
+    string gzDateStr=3;
     string orderId=4;
     string transactionType=5;
     string direction=6;
@@ -23,7 +23,7 @@ message SalesDetailQueryResponseMessage{
     string specification=15;
     double totalWeight=16;
     double goldWeight=17;
-    double unknownDouble1=18;
+    double miscellaneousDeductionAmount=18;
     double mainStoneWeight=19;
     int32 mainStoneCount=20;
     string cleanness=21;
@@ -32,7 +32,7 @@ message SalesDetailQueryResponseMessage{
     int32 viceStoneCount=24;
     double sellingDiscount=25;
     double goldPrice=26;
-    double unKnownDouble2=27;
+    double processingFee=27;
     double unKnownDouble3=29;
     double tagPrice=30;
     double actualSellingPrice=31;
@@ -49,7 +49,7 @@ message SalesDetailQueryResponseMessage{
     string cashierType=42;
     string exchangeMaterialType=43;
     double unknownDouble4=44;
-    double unknownDouble5=46;
+    double purchaseCost=46;
     string unknownStr2=47;
     string unit=48;
   }

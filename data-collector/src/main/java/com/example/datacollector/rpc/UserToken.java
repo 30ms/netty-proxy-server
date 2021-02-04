@@ -6,7 +6,6 @@ public class UserToken {
 
     private final String token;
 
-
     public UserToken(String token) {
         this.token = token;
     }
@@ -16,5 +15,9 @@ public class UserToken {
         byte[] t = token.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(t, 0, result, 0, t.length);
         return result;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

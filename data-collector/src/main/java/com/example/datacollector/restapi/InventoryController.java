@@ -1,6 +1,7 @@
 package com.example.datacollector.restapi;
 
 import com.example.datacollector.config.RPCRequestTemplate;
+import com.example.datacollector.config.UserTokenStorage;
 import com.example.datacollector.rpc.*;
 import com.example.datacollector.rpc.protobuf.InventoryQueryRequestProto;
 import com.example.datacollector.rpc.protobuf.InventoryQueryResponseProto;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,12 +22,15 @@ public class InventoryController {
     @Autowired
     private RPCRequestTemplate rpcRequestTemplate;
 
+    @Autowired
+    private UserTokenStorage userTokenStorage;
+
     @GetMapping("list")
-    public ResponseEntity inventoryQuery() {
+    public ResponseEntity inventoryQuery(@RequestParam(value = "netPointNumber",defaultValue = "574") String netPointNumber) {
         DefaultRequest request = new InventoryRequest(
-                new UserToken("7fb14db3bbb8422ba874434f1eb34b5c"),
+                userTokenStorage.get(),
                 InventoryQueryRequestProto.InventoryQueryRequestMessage.newBuilder()
-                        .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("wdbm").setValue("574").build())
+                        .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("wdbm").setValue(netPointNumber).build())
                         .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("ckbm").setValue("").build())
                         .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("dlbm").setValue("").build())
                         .addRequestParam(RequestParamProto.RequestParamMessage.newBuilder().setName("czbm").setValue("").build())

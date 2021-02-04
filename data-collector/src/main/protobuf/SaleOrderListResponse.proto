@@ -19,7 +19,7 @@ message SaleOrderListResponseMessage{
     string businessDateStr=10;        //0x52
     string assistantStr=12;           //0x62
     string unKnownStr1=13;            //0x6a
-    sint32 count=14;                   //0x70
+    int32 count=14;                   //0x70
     double goldTotalWeight=15;        //0x79
     double actualTotalSellingPrice=18;//0x9101
     double discountTotalAmount=19;    //0x9901

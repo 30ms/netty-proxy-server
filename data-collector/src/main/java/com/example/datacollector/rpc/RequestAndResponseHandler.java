@@ -22,18 +22,19 @@ public class RequestAndResponseHandler extends ChannelInboundHandlerAdapter {
         String id = ctx.channel().id().asShortText();
         if (channelDataBuf.containsKey(id)) {
             ByteBuf byteBuf = channelDataBuf.get(id);
+            Util.writeByteBufToFile(byteBuf, "C:\\Users\\Administrator\\Desktop\\2.txt", false);
             byteBuf.markReaderIndex();
-            int responseLength = byteBuf.readInt();
+            long responseLength = byteBuf.readUnsignedInt();
             int currentLength= byteBuf.writerIndex()-4;
             if (currentLength == responseLength) {
                 byteBuf.skipBytes(12);//跳过12个空字节
-                System.out.println("响应数据接收完成,准备断开连接...");
-                ctx.channel().close();
+                System.out.println("响应数据接收完成");
+                ctx.fireChannelRead(byteBuf);
+                channelDataBuf.remove(id);
             }else {
                 byteBuf.resetReaderIndex();
             }
         }
-        super.channelReadComplete(ctx);
     }
 
     @Override
@@ -51,17 +52,6 @@ public class RequestAndResponseHandler extends ChannelInboundHandlerAdapter {
         }));
     }
 
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        String id = ctx.channel().id().asShortText();
-        if (channelDataBuf.containsKey(id)) {
-            ByteBuf byteBuf = channelDataBuf.get(id);
-            Util.writeByteBufToFile(byteBuf, "C:\\Users\\Administrator\\Desktop\\2.txt", false);
-            System.out.println("开始解码...");
-            ctx.fireChannelRead(byteBuf);
-            channelDataBuf.remove(id);
-        }
-    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

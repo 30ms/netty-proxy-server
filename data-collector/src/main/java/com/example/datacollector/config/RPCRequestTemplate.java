@@ -2,6 +2,7 @@ package com.example.datacollector.config;
 
 import com.example.datacollector.rpc.DecodePromiseHandler;
 import com.example.datacollector.rpc.DefaultRequest;
+import com.example.datacollector.rpc.ProtobufFixedInt32FrameDecoder;
 import com.example.datacollector.rpc.RequestAndResponseHandler;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageLite;
@@ -38,7 +39,7 @@ public class RPCRequestTemplate {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
                         channel.pipeline()
-                                .addLast(new RequestAndResponseHandler(request))
+                                .addLast(new ProtobufFixedInt32FrameDecoder(request))
                                 .addLast(new ProtobufDecoder(messageLite))
                                 .addLast(new DecodePromiseHandler(promise));
                     }

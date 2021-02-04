@@ -24,6 +24,7 @@ dependencies {
     implementation 'io.netty:netty-all'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.protobuf:protobuf-java:3.14.0'
+    implementation 'com.asprise.ocr:java-ocr-api:15.3.0.3'
 //    implementation 'io.grpc:grpc-all:1.35.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -68,6 +69,7 @@ protobuf {
     generateProtoTasks {
         all()*.plugins {
             grpc {
+                outputSubDir = 'java'
             }
         }
     }

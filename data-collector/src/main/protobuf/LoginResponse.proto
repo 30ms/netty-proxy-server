@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.example.datacollector.rpc.protobuf;
+
+option java_outer_classname="LoginResponseProto";
+
+message LoginResponseMessage{
+    string userToken=5;
+}

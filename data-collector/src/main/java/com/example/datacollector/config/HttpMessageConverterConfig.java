@@ -13,7 +13,10 @@ public class HttpMessageConverterConfig {
     @Bean
     public HttpMessageConverters httpMessageConverters() {
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder()
+                //自定义序列化反序列化排除策略
+                .setExclusionStrategies(new ProtoBufMessageGsonExclusionStrategy())
+                .create();
         gsonHttpMessageConverter.setGson(gson);
         return new HttpMessageConverters(gsonHttpMessageConverter);
     }
